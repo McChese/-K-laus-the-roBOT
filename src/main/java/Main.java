@@ -1,35 +1,44 @@
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
-
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import org.apache.log4j.BasicConfigurator;
 import java.io.*;
 
-public class Main {
-    public static void main(String[] args) throws IOException {
 
-        String botToken = getBotTokenFromTextFile();
-        JDABuilder jdaBuilder = JDABuilder.createDefault(botToken); //creates the Bot
+public class Main {
+    public static void main(String[] args){
+
+        String minecraftServerIP = "TheGreatestServerEve.aternos.me";
+
+
+        BasicConfigurator.configure();
+        String botToken = "tokenFailure";
+        try {
+            botToken = getBotTokenFromTextFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        JDABuilder jdaBuilder = JDABuilder.createDefault(botToken);
 
         jdaBuilder.setStatus(OnlineStatus.ONLINE);
-        System.out.println("-Bot is now online-");
-
+        System.out.println("-Bot is now online-\n\n\n");
         jdaBuilder.addEventListeners(new receiveMessage());
-
-
-
-        JDA bot = jdaBuilder.build(); //build the bot
+        jdaBuilder.enableIntents(GatewayIntent.MESSAGE_CONTENT);
+        jdaBuilder.build();
     }
 
     public static String getBotTokenFromTextFile() throws IOException {
-        FileInputStream fstream = new FileInputStream("src/main/java/bot-token");
-        BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+        String sCurrentLine;
+        BufferedReader br = new BufferedReader(new FileReader("src/main/java/bot-token.txt"));
 
-        String strLine;
-        while ((strLine = br.readLine()) != null)
-        {
-            System.out.println ("Your set Bot token is: " + strLine + "    Do not share this token with someone!\n");
+        while ((sCurrentLine = br.readLine()) != "-1") {
+            System.out.println("Your Bot token is:   -" + sCurrentLine + "-     do not share this token with anyone!\n\n\n");
+            break;
         }
-        return strLine;
+        return sCurrentLine;
+
     }
 
 
